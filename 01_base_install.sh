@@ -11,7 +11,7 @@ if [[ "$(id -u)" -ne 0 ]]; then
 fi
 
 # Source answers file, error out otherwise.
-if [[ ! -f "./confs/answers.env" ]] || [[ ! "$PRE_INSTALL" -ne "COMPLETE" ]]; then
+if [[ ! -f "./confs/answers.env" ]] || [[ "$PRE_INSTALL" -ne "COMPLETE" ]]; then
     echo "Answers file is missing or incomplete, please re-run pre_install.sh"
     exit 1
 else
