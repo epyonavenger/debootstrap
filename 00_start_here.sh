@@ -69,9 +69,15 @@ while [[ -z "$PRE_LOCALE" ]]; do
 done
 
 #### Export Answers ###
-PRE_EFI_PART="$PRE_BOOT_DISK"1
-PRE_BOOT_PART="$PRE_BOOT_DISK"2
-PRE_ROOT_PART="$PRE_BOOT_DISK"3
+if [[ $PRE_BOOT_DISK =~ "nvme" ]]; then
+    PRE_EFI_PART="$PRE_BOOT_DISK"p1
+    PRE_BOOT_PART="$PRE_BOOT_DISK"p2
+    PRE_ROOT_PART="$PRE_BOOT_DISK"p3
+else
+    PRE_EFI_PART="$PRE_BOOT_DISK"1
+    PRE_BOOT_PART="$PRE_BOOT_DISK"2
+    PRE_ROOT_PART="$PRE_BOOT_DISK"3
+fi
 
 touch confs/answers.env
 echo '#!/bin/bash' >> confs/answers.env
