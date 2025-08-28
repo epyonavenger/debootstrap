@@ -47,7 +47,13 @@ done
 # Prompter user for install type.
 while [[ -z "$PRE_INSTALL_TYPE" ]]; do
     echo ""
-    read -r -i "DESKTOP" -p "Please enter an install type or accept the default (Valid types are DESKTOP and SERVER): " -e PRE_INSTALL_TYPE
+    read -r -i "desktop" -p "Please enter an install type or accept the default (Valid types are 'desktop' and 'server'): " -e PRE_INSTALL_TYPE
+done
+
+# Prompter user for dual-boot or single-boot.
+while [[ -z "$PRE_DUAL_BOOT" ]]; do
+    echo ""
+    read -r -i "no" -p "Please indicate whether the system is a dual-boot or accept the default (Valid types are 'yes' and 'no'): " -e PRE_DUAL_BOOT
 done
 
 # Prompt user for timezone.
@@ -74,6 +80,7 @@ echo "export BOOT_DISK=$PRE_BOOT_DISK" >> confs/answers.env
 echo "export EFI_PART=$PRE_EFI_PART" >> confs/answers.env
 echo "export BOOT_PART=$PRE_BOOT_PART" >> confs/answers.env
 echo "export ROOT_PART=$PRE_ROOT_PART" >> confs/answers.env
+echo "export DUAL_BOOT=$PRE_DUAL_BOOT" >> confs/answers.env
 echo "export TIMEZONE=$PRE_TIMEZONE" >> confs/answers.env
 echo "export LOCALE=$PRE_LOCALE" >> confs/answers.env
 echo "export NEW_USER=$PRE_NEW_USER" >> confs/answers.env

@@ -11,7 +11,7 @@ if [[ "$(id -u)" -ne 0 ]]; then
 fi
 
 # Source answers file, error out otherwise.
-if [[ ! -f "./confs/answers.env" ]] && [[ ! "$PRE_INSTALL" -ne "COMPLETE" ]]; then
+if [[ ! -f "./confs/answers.env" ]] || [[ ! "$PRE_INSTALL" -ne "COMPLETE" ]]; then
     echo "Answers file is missing or incomplete, please re-run pre_install.sh"
     exit 1
 else
@@ -32,8 +32,11 @@ sgdisk -n "1:0:+2G" -t "1:ef00" "$BOOT_DISK"
 sgdisk -c "1:EFI system partition" "$BOOT_DISK"
 sgdisk -n "2:0:+2G" -t "2:8300" "$BOOT_DISK"
 sgdisk -c "2:Linux filesystem" "$BOOT_DISK"
-sgdisk -n "3:0:0" -t "3:8309" "$BOOT_DISK"
+sgdisk -n "3:0:+50%" -t "3:8309" "$BOOT_DISK"
 sgdisk -c "3:Linux LUKS" "$BOOT_DISK"
+if [[ "$DUAL_BOOT" -eq "yes" ]]; then
+    parted "$BOOT_DISK" resizepart 3 50%
+fi
 
 # Prompt for LUKS password, or use the variable if it's set.
 cryptsetup luksFormat --batch-mode "$ROOT_PART" <<< "$LUKS_PASS"
@@ -65,7 +68,7 @@ cp confs/ubuntu.sources /mnt/etc/apt/sources.list.d/ubuntu.sources
 cp confs/ignored-packages /mnt/etc/apt/preferences.d/ignored-packages
 
 # Additional apt configuration for desktop installs.
-if [[ "$INSTALL_TYPE" -eq "DESKTOP" ]]; then
+if [[ "$INSTALL_TYPE" -eq "desktop" ]]; then
     # Stage Mozilla repo and signing key.
     install -d -m 0755 /mnt/etc/apt/keyrings
     wget -q https://packages.mozilla.org/apt/repo-signing-key.gpg -O /mnt/etc/apt/keyrings/packages.mozilla.org.asc
@@ -81,7 +84,7 @@ if [[ "$INSTALL_TYPE" -eq "DESKTOP" ]]; then
 fi
 
 # If server install, add networking file.
-if [[ "$INSTALL_TYPE" -eq "SERVER" ]]; then
+if [[ "$INSTALL_TYPE" -eq "server" ]]; then
     cp confs/10-wired.network /mnt/etc/systemd/network/10-wired.network
 fi
 

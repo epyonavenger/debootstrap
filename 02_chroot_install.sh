@@ -48,13 +48,13 @@ yes "$USER_PASS" | passwd "$NEW_USER"
 # Allow errors here because of snap and cloud-init changes earlier.
 set +e
 
-if [[ "$INSTALL_TYPE" -eq "SERVER" ]]; then
+if [[ "$INSTALL_TYPE" -eq "server" ]]; then
     apt -qq -y install ubuntu-minimal ubuntu-standard ubuntu-server-minimal ubuntu-server ssh htop iftop iotop tree nano bash-completion wget systemd-zram-generator
     # Set up server networking.
     systemctl enable systemd-networkd systemd-resolved
 fi
 
-if [[ "$INSTALL_TYPE" -eq "DESKTOP" ]]; then
+if [[ "$INSTALL_TYPE" -eq "desktop" ]]; then
     apt -qq -y install ubuntu-minimal ubuntu-standard ubuntu-desktop-minimal ssh firefox flatpak gnome-software-plugin-flatpak gnome-firmware htop iftop iotop tree nano bash-completion wget systemd-zram-generator
     # Configure flatpak instead of snap.
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
