@@ -48,7 +48,7 @@ useradd -mG sudo,adm -s /usr/bin/bash "$NEW_USER"
 yes "$USER_PASS" | passwd "$NEW_USER"
 
 #### Base System Type Install ####
-if [[ $DESKTOP_INSTALL ]]; then
+if "$DESKTOP_INSTALL"; then
     apt -qq -y install ubuntu-minimal ubuntu-standard ubuntu-desktop-minimal ssh firefox flatpak gnome-software-plugin-flatpak gnome-firmware htop iftop iotop tree nano bash-completion wget systemd-zram-generator
     # Configure flatpak instead of snap.
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
@@ -77,7 +77,9 @@ apt -qq -y clean
 # Clean up installer files.
 rm /root/answers.env
 rm /root/02_chroot_install.sh
-rm /root/google-chrome-stable_current_amd64.deb
+if "$DESKTOP_INSTALL"; then
+    rm /root/google-chrome-stable_current_amd64.deb
+fi
 
 # Lock root on the way out.
 passwd --lock root

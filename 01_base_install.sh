@@ -11,7 +11,7 @@ if [[ "$(id -u)" -ne 0 ]]; then
 fi
 
 # Source answers file, error out otherwise.
-if [[ ! -f "./confs/answers.env" ]] || [[ ! $PRE_INSTALL_COMPLETE ]]; then
+if [[ ! -f "./confs/answers.env" ]] || [[ $PRE_INSTALL_COMPLETE -ne "true" ]]; then
     echo "Answers file is missing or incomplete, please re-run 00_start_here.sh"
     exit 1
 else
@@ -32,9 +32,9 @@ sgdisk -n "1:0:+2G" -t "1:ef00" "$BOOT_DISK"
 sgdisk -c "1:EFI system partition" "$BOOT_DISK"
 sgdisk -n "2:0:+2G" -t "2:8300" "$BOOT_DISK"
 sgdisk -c "2:Linux filesystem" "$BOOT_DISK"
-sgdisk -n "3:0:+50%" -t "3:8309" "$BOOT_DISK"
+sgdisk -n "3:0:0" -t "3:8309" "$BOOT_DISK"
 sgdisk -c "3:Linux LUKS" "$BOOT_DISK"
-if [[ $DUAL_BOOT ]]; then
+if "$DUAL_BOOT"; then
     parted "$BOOT_DISK" resizepart 3 50%
 fi
 
@@ -68,7 +68,7 @@ cp confs/ubuntu.sources /mnt/etc/apt/sources.list.d/ubuntu.sources
 cp confs/ignored-packages /mnt/etc/apt/preferences.d/ignored-packages
 
 # Install type related configuration.
-if [[ $DESKTOP_INSTALL ]]; then
+if "$DESKTOP_INSTALL"; then
     # Additional apt configuration for desktop installs.
     # Stage Mozilla repo and signing key.
     install -d -m 0755 /mnt/etc/apt/keyrings
