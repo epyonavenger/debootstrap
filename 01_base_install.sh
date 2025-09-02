@@ -11,8 +11,8 @@ if [[ "$(id -u)" -ne 0 ]]; then
 fi
 
 # Source answers file, error out otherwise.
-if [[ ! -f "./confs/answers.env" ]] || [[ "$PRE_INSTALL" -ne "COMPLETE" ]]; then
-    echo "Answers file is missing or incomplete, please re-run pre_install.sh"
+if [[ ! -f "./confs/answers.env" ]] || [[ ! $PRE_INSTALL_COMPLETE ]]; then
+    echo "Answers file is missing or incomplete, please re-run 00_start_here.sh"
     exit 1
 else
     source confs/answers.env
@@ -34,7 +34,7 @@ sgdisk -n "2:0:+2G" -t "2:8300" "$BOOT_DISK"
 sgdisk -c "2:Linux filesystem" "$BOOT_DISK"
 sgdisk -n "3:0:+50%" -t "3:8309" "$BOOT_DISK"
 sgdisk -c "3:Linux LUKS" "$BOOT_DISK"
-if [[ "$DUAL_BOOT" -eq "yes" ]]; then
+if [[ $DUAL_BOOT ]]; then
     parted "$BOOT_DISK" resizepart 3 50%
 fi
 
@@ -67,8 +67,9 @@ rm /mnt/etc/apt/sources.list
 cp confs/ubuntu.sources /mnt/etc/apt/sources.list.d/ubuntu.sources
 cp confs/ignored-packages /mnt/etc/apt/preferences.d/ignored-packages
 
-# Additional apt configuration for desktop installs.
-if [[ "$INSTALL_TYPE" -eq "desktop" ]]; then
+# Install type related configuration.
+if [[ $DESKTOP_INSTALL ]]; then
+    # Additional apt configuration for desktop installs.
     # Stage Mozilla repo and signing key.
     install -d -m 0755 /mnt/etc/apt/keyrings
     wget -q https://packages.mozilla.org/apt/repo-signing-key.gpg -O /mnt/etc/apt/keyrings/packages.mozilla.org.asc
@@ -77,19 +78,19 @@ if [[ "$INSTALL_TYPE" -eq "desktop" ]]; then
     # Stage Google Chrome.
     wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O /mnt/root/google-chrome-stable_current_amd64.deb
     # Add programs to desktop dock.
-    mkdir -p /mnt/etc/dconf/db/site.d/
-    mkdir -p /mnt/etc/dconf/profile/
+    install -d -m 0755 /mnt/etc/dconf/db/site.d/
+    install -d -m 0755 /mnt/etc/dconf/profile/
     cp confs/dconf-00_site_settings /mnt/etc/dconf/db/site.d/00_site_settings
     cp confs/dconf-user /mnt/etc/dconf/profile/user
-fi
-
-# If server install, add networking file.
-if [[ "$INSTALL_TYPE" -eq "server" ]]; then
+else
+    # If server install, add networking file.
     cp confs/10-wired.network /mnt/etc/systemd/network/10-wired.network
 fi
 
 # Copy chroot installer files into chroot.
 cp confs/answers.env /mnt/root/answers.env
+cp confs/cloud-init_1.0_all.deb /mnt/root/cloud-init_1.0_all.deb
+cp confs/snapd_2.68.5_amd64.deb /mnt/root/snapd_2.68.5_amd64.deb
 cp 02_chroot_install.sh /mnt/root/02_chroot_install.sh
 
 # Chroot into the installation environment and continue installation.

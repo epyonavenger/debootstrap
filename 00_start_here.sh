@@ -25,47 +25,58 @@ done
 # Prompt user to enter the disk they want to install on.
 while [[ ! -e "$PRE_BOOT_DISK" ]]; do
     echo ""
-    read -r -p "Please enter the disk you want to install on (eg. /dev/sda, /dev/nvme0n1, /dev/vda, etc.): " PRE_BOOT_DISK
+    echo "Please enter the disk you want to install on."
+    echo "(eg. /dev/sda, /dev/nvme0n1, /dev/vda, etc.)"
+    read -r PRE_BOOT_DISK
 done
 
 # Prompt user for LUKS unlock.
 while [[ -z "$PRE_LUKS_PASS" ]]; do
     echo ""
-    read -r -i "unl0ckMyD1sk" -p "Please enter a LUKS password or accept the default: " -e PRE_LUKS_PASS
+    echo "Please enter a LUKS password or accept the default."
+    read -r -i "unl0ckMyD1sk" -e PRE_LUKS_PASS
 done
 
 # Prompt user for local admin info.
 while [[ -z "$PRE_NEW_USER" ]]; do
     echo ""
-    read -r -i "ubuntu" -p "Please enter a local admin username or accept the default: " -e PRE_NEW_USER
+    echo "Please enter a local admin username or accept the default."
+    read -r -i "ubuntu" -e PRE_NEW_USER
 done
 while [[ -z "$PRE_USER_PASS" ]]; do
     echo
-    read -r -i "ubuntu" -p "Please enter a local admin password or accept the default: " -e PRE_USER_PASS
+    echo "Please enter a local admin password or accept the default."
+    read -r -i "ubuntu" -e PRE_USER_PASS
 done
 
 # Prompter user for install type.
 while [[ -z "$PRE_INSTALL_TYPE" ]]; do
     echo ""
-    read -r -i "desktop" -p "Please enter an install type or accept the default (Valid types are 'desktop' and 'server'): " -e PRE_INSTALL_TYPE
+    echo "Configure for Desktop use?"
+    echo "(Valid answers are \'true\' or \'false\')"
+    read -r -i "false" -e PRE_DESKTOP_INSTALL
 done
 
 # Prompter user for dual-boot or single-boot.
 while [[ -z "$PRE_DUAL_BOOT" ]]; do
     echo ""
-    read -r -i "no" -p "Please indicate whether the system is a dual-boot or accept the default (Valid types are 'yes' and 'no'): " -e PRE_DUAL_BOOT
+    echo "Configure dual-boot partition layout?"
+    echo "(Valid answers are \'true\' or \'false\')"
+    read -r -i "false" -e PRE_DUAL_BOOT
 done
 
 # Prompt user for timezone.
 while [[ -z "$PRE_TIMEZONE" ]]; do
     echo ""
-    read -r -i "America/Los_Angeles" -p "Please enter a timezone or accept the default: " -e PRE_TIMEZONE
+    echo "Please enter a timezone or accept the default."
+    read -r -i "America/Los_Angeles" -e PRE_TIMEZONE
 done
 
 # Prompt user for locale.
 while [[ -z "$PRE_LOCALE" ]]; do
     echo ""
-    read -r -i "en_US.UTF-8" -p "Please enter a locale or accept the default: " -e PRE_LOCALE
+    echo "Please enter a locale or accept the default."
+    read -r -i "en_US.UTF-8" -e PRE_LOCALE
 done
 
 #### Export Answers ###
@@ -91,9 +102,10 @@ echo "export TIMEZONE=$PRE_TIMEZONE" >> confs/answers.env
 echo "export LOCALE=$PRE_LOCALE" >> confs/answers.env
 echo "export NEW_USER=$PRE_NEW_USER" >> confs/answers.env
 echo "export USER_PASS=$PRE_USER_PASS" >> confs/answers.env
-echo "export INSTALL_TYPE=$PRE_INSTALL_TYPE" >> confs/answers.env
+echo "export DESKTOP_INSTALL=$PRE_DESKTOP_INSTALL" >> confs/answers.env
 
-echo "export PRE_INSTALL=COMPLETE" >> confs/answers.env
+# If all the above succeeds, mark the answer file as complete.
+echo "export PRE_INSTALL_COMPLETE=true" >> confs/answers.env
 
 echo 'Answers file complete, starting the install...'
 ./01_base_install.sh
