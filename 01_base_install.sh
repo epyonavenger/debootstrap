@@ -82,6 +82,8 @@ if "$DESKTOP_INSTALL"; then
     install -d -m 0755 /mnt/etc/dconf/profile/
     cp confs/dconf-00_site_settings /mnt/etc/dconf/db/site.d/00_site_settings
     cp confs/dconf-user /mnt/etc/dconf/profile/user
+    # Disable gnome-initial-setup
+    cp confs/gdm-custom.conf /mnt/etc/gdm3/custom.conf
 else
     # If server install, add networking file.
     cp confs/10-wired.network /mnt/etc/systemd/network/10-wired.network
