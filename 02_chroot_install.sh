@@ -31,7 +31,6 @@ echo "cryptroot $(blkid -o export $ROOT_PART | grep ^UUID) none luks,discard" >>
 apt -qq -y install linux-{,image-,headers-,tools-}generic-hwe-*-edge linux-firmware initramfs-tools cryptsetup-initramfs efibootmgr dosfstools keyutils dmidecode
 
 # Install dummy packages to prevent apt errors.
-apt -qq -y install /root/cloud-init_1.0_all.deb
 apt -qq -y install /root/snapd_2.68.5_amd64.deb
 
 ## Set hostname.

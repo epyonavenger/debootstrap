@@ -89,7 +89,6 @@ fi
 
 # Copy chroot installer files into chroot.
 cp confs/answers.env /mnt/root/answers.env
-cp confs/cloud-init_1.0_all.deb /mnt/root/cloud-init_1.0_all.deb
 cp confs/snapd_2.68.5_amd64.deb /mnt/root/snapd_2.68.5_amd64.deb
 cp 02_chroot_install.sh /mnt/root/02_chroot_install.sh
 

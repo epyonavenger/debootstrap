@@ -8,9 +8,7 @@ These scripts will get you a basic Ubuntu desktop (or server) install with the f
   * Boot (ext4)
   * Root (LUKS-encrypted ext4)
 * Canonical-isms removed.
-  * cloud-init
   * snap
-  * netplan ignored by default (ff I can find a way to remove this without breaking NetworkManager, I will).
 * Standard things added.
   * Firefox/Chrome + dock pins (on desktop installs).
   * Flatpak + default repos.
