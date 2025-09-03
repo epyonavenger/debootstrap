@@ -83,6 +83,7 @@ if "$DESKTOP_INSTALL"; then
     cp confs/dconf-00_site_settings /mnt/etc/dconf/db/site.d/00_site_settings
     cp confs/dconf-user /mnt/etc/dconf/profile/user
     # Disable gnome-initial-setup
+    install -d -m 0755 /mnt/etc/gdm3/
     cp confs/gdm-custom.conf /mnt/etc/gdm3/custom.conf
 else
     # If server install, add networking file.
