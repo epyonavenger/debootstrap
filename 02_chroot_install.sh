@@ -35,7 +35,7 @@ apt -qq -y install /root/snapd_2.68.5_amd64.deb
 
 ## Set hostname.
 HOSTNAME="$(dmidecode -s system-serial-number)"
-if [[ -z "$HOSTNAME" ]] || [[ $HOSTNAME -eq "NotSpecified" ]]; then
+if [[ -z "$HOSTNAME" ]] || [[ $HOSTNAME ~= "NotSpecified" ]]; then
     HOSTNAME="$(date | md5sum | cut -d ' ' -f1)"
 else
     echo "$HOSTNAME" > /etc/hostname
@@ -74,11 +74,7 @@ apt -qq -y autopurge
 apt -qq -y clean
 
 # Clean up installer files.
-rm /root/answers.env
-rm /root/02_chroot_install.sh
-if "$DESKTOP_INSTALL"; then
-    rm /root/google-chrome-stable_current_amd64.deb
-fi
+rm /root/*
 
 # Lock root on the way out.
 passwd --lock root
