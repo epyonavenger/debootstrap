@@ -35,7 +35,7 @@ apt -qq -y install /root/snapd_2.68.5_amd64.deb
 
 ## Set hostname.
 HOSTNAME="$(dmidecode -s system-serial-number)"
-if [[ -z "$HOSTNAME" ]] || [[ $HOSTNAME ~= "NotSpecified" ]]; then
+if [[ -z "$HOSTNAME" ]] || [[ $HOSTNAME =~ "NotSpecified" ]]; then
     HOSTNAME="$(date | md5sum | cut -d ' ' -f1)"
 else
     echo "$HOSTNAME" > /etc/hostname
