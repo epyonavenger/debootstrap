@@ -48,7 +48,7 @@ yes "$USER_PASS" | passwd "$NEW_USER"
 
 #### Base System Type Install ####
 if "$DESKTOP_INSTALL"; then
-    apt -qq -y install ubuntu-minimal ubuntu-standard ubuntu-desktop-minimal ssh firefox flatpak gnome-software-plugin-flatpak gnome-firmware htop iftop iotop tree nano bash-completion wget systemd-zram-generator
+    apt -qq -y install ubuntu-minimal ubuntu-standard ubuntu-desktop-minimal ssh firefox flatpak gnome-software-plugin-flatpak gnome-firmware htop iftop iotop tree nano bash-completion wget systemd-zram-generator vainfo clinfo vdpauinfo pocl-opencl-icd
     # Configure flatpak instead of snap.
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
     # Install Google Chrome.
