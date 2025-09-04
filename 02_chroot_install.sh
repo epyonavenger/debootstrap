@@ -31,16 +31,12 @@ echo "cryptroot $(blkid -o export $ROOT_PART | grep ^UUID) none luks,discard" >>
 apt -qq -y install linux-{,image-,headers-,tools-}generic-hwe-*-edge linux-firmware initramfs-tools cryptsetup-initramfs efibootmgr dosfstools keyutils dmidecode
 
 # Install dummy packages to prevent apt errors.
-apt -qq -y install /root/snapd_2.68.5_amd64.deb
+apt -qq -y install '/root/snapd_2.68.5_amd64.deb'
+apt -qq -y install '/root/gnome-initial-setup_46.3-1ubuntu3~24.04.2_amd64.deb'
 
 ## Set hostname.
-HOSTNAME="$(dmidecode -s system-serial-number)"
-if [[ -z "$HOSTNAME" ]] || [[ $HOSTNAME =~ "Not Specified" ]]; then
-    HOSTNAME="$(date | md5sum | cut -d ' ' -f1)"
-else
-    echo "$HOSTNAME" > /etc/hostname
-    echo "127.0.1.1 $HOSTNAME" >> /etc/hosts
-fi
+echo "$HOST_NAME" > /etc/hostname
+echo "127.0.1.1 $HOST_NAME" >> /etc/hosts
 
 #### User Management Tasks ####
 useradd -mG sudo,adm -s /usr/bin/bash "$NEW_USER"
@@ -48,13 +44,13 @@ yes "$USER_PASS" | passwd "$NEW_USER"
 
 #### Base System Type Install ####
 if "$DESKTOP_INSTALL"; then
-    apt -qq -y install ubuntu-minimal ubuntu-standard ubuntu-desktop-minimal ssh firefox flatpak gnome-software-plugin-flatpak gnome-firmware htop iftop iotop tree nano bash-completion wget systemd-zram-generator vainfo clinfo vdpauinfo pocl-opencl-icd
+    apt -qq -y install ubuntu-minimal ubuntu-standard ubuntu-desktop-minimal ssh firefox flatpak gnome-software-plugin-flatpak gnome-firmware htop iftop iotop tree nano bash-completion wget systemd-zram-generator clinfo pocl-opencl-icd vainfo vdpauinfo vulkan-tools
     # Configure flatpak instead of snap.
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
     # Install Google Chrome.
     apt -qq -y install /root/google-chrome-stable_current_amd64.deb
 else
-    apt -qq -y install ubuntu-minimal ubuntu-standard ubuntu-server-minimal ubuntu-server ssh htop iftop iotop tree nano bash-completion wget systemd-zram-generator
+    apt -qq -y install ubuntu-minimal ubuntu-standard ubuntu-server-minimal ubuntu-server ssh htop iftop iotop tree nano bash-completion wget systemd-zram-generator clinfo pocl-opencl-icd
     # Set up server networking.
     systemctl enable systemd-networkd systemd-resolved
 fi

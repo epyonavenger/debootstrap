@@ -1,3 +1,0 @@
-Package: snapd gnome-software-plugin-snap gnome-initial-setup
-Pin: release *
-Pin-Priority: -1
