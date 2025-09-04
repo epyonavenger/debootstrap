@@ -13,8 +13,9 @@ These scripts will get you a basic Ubuntu desktop (or server) install with the f
   * Firefox/Chrome + dock pins (on desktop installs).
   * Flatpak + default repos.
   * Gnome Firmware for firmware updates.
+  * VA, VDPAU, OpenCL, and Vulkan packages.
+  * systemd-zram-generator for zram-based swap.
   * systemd-networkd based DHCP for all physical adapters (on server installs).
-
 
 ### Using These Scripts
 1. As the numbering might suggest, you want to start by running `00_start_here.sh` to populate the `answers.env` file, unless you already have one.
