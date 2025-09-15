@@ -44,11 +44,13 @@ yes "$USER_PASS" | passwd "$NEW_USER"
 
 #### Base System Type Install ####
 if "$DESKTOP_INSTALL"; then
-    apt -qq -y install ubuntu-minimal ubuntu-standard ubuntu-desktop-minimal ssh firefox flatpak gnome-software-plugin-flatpak gnome-firmware htop iftop iotop tree nano bash-completion wget systemd-zram-generator clinfo mesa-opencl-icd intel-opencl-icd pocl-opencl-icd vainfo vdpauinfo vulkan-tools
+    apt -qq -y install ubuntu-minimal ubuntu-standard ubuntu-desktop-minimal ssh firefox flatpak gnome-software-plugin-flatpak gnome-firmware htop iftop iotop tree nano bash-completion wget systemd-zram-generator clinfo mesa-opencl-icd intel-opencl-icd pocl-opencl-icd vainfo vulkan-tools
     # Configure flatpak instead of snap.
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
     # Install Google Chrome.
     apt -qq -y install /root/google-chrome-stable_current_amd64.deb
+    # Disable user list in GDM.
+    sed -i 's/# disable-user-list=true/disable-user-list=true/' /etc/gdm3/greeter.dconf-defaults
 else
     apt -qq -y install ubuntu-minimal ubuntu-standard ubuntu-server-minimal ubuntu-server ssh htop iftop iotop tree nano bash-completion wget systemd-zram-generator clinfo pocl-opencl-icd
     # Set up server networking.

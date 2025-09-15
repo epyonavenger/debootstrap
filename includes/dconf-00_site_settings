@@ -1,2 +1,4 @@
 [org/gnome/shell]
 favorite-apps=['firefox.desktop', 'google-chrome.desktop', 'org.gnome.Nautilus.desktop', 'yelp.desktop']
+[org/gnome/desktop/lockdown]
+disable-user-switching=true

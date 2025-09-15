@@ -78,10 +78,12 @@ if "$DESKTOP_INSTALL"; then
     # Stage Google Chrome.
     wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O /mnt/root/google-chrome-stable_current_amd64.deb
     # Add programs to desktop dock.
-    install -d -m 0755 /mnt/etc/dconf/db/site.d/
     install -d -m 0755 /mnt/etc/dconf/profile/
+    install -d -m 0755 /mnt/etc/dconf/db/site.d/locks/
     cp includes/dconf-00_site_settings /mnt/etc/dconf/db/site.d/00_site_settings
+    cp includes/dconf-site_lockdown /mnt/etc/dconf/db/site.d/locks/lockdown
     cp includes/dconf-user /mnt/etc/dconf/profile/user
+    cp 'includes/gnome-initial-setup_46.3-1ubuntu3~24.04.2_amd64.deb' '/mnt/root/gnome-initial-setup_46.3-1ubuntu3~24.04.2_amd64.deb'
 else
     # If server install, add networking file.
     cp includes/10-wired.network /mnt/etc/systemd/network/10-wired.network
@@ -90,7 +92,6 @@ fi
 # Copy chroot installer files into chroot.
 cp includes/answers.env /mnt/root/answers.env
 cp 'includes/snapd_2.68.5_amd64.deb' '/mnt/root/snapd_2.68.5_amd64.deb'
-cp 'includes/gnome-initial-setup_46.3-1ubuntu3~24.04.2_amd64.deb' '/mnt/root/gnome-initial-setup_46.3-1ubuntu3~24.04.2_amd64.deb'
 cp 02_chroot_install.sh /mnt/root/02_chroot_install.sh
 
 # Chroot into the installation environment and continue installation.

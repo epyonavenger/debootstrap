@@ -83,6 +83,9 @@ while [[ -z "$PRE_LOCALE" ]]; do
     read -r -i "en_US.UTF-8" -e PRE_LOCALE
 done
 
+# Start doing graphics detection here.
+#GRAPHICS="$(lspci |grep 'VGA')"
+
 #### Export Answers ###
 if [[ $PRE_BOOT_DISK =~ "nvme" ]]; then
     PRE_EFI_PART="$PRE_BOOT_DISK"p1
