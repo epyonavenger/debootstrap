@@ -83,6 +83,7 @@ if "$DESKTOP_INSTALL"; then
     cp includes/dconf-00_site_settings /mnt/etc/dconf/db/site.d/00_site_settings
     cp includes/dconf-site_lockdown /mnt/etc/dconf/db/site.d/locks/lockdown
     cp includes/dconf-user /mnt/etc/dconf/profile/user
+    cp includes/google-chrome.desktop /mnt/root/google-chrome.desktop
     cp 'includes/gnome-initial-setup_46.3-1ubuntu3~24.04.2_amd64.deb' '/mnt/root/gnome-initial-setup_46.3-1ubuntu3~24.04.2_amd64.deb'
 else
     # If server install, add networking file.

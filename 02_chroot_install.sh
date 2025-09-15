@@ -49,6 +49,8 @@ if "$DESKTOP_INSTALL"; then
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
     # Install Google Chrome.
     apt -qq -y install /root/google-chrome-stable_current_amd64.deb
+    install -d -m 0755 /usr/local/share/applications
+    mv /root/google-chrome.desktop /usr/local/share/applications/google-chrome.desktop
     # Disable user list in GDM.
     sed -i 's/# disable-user-list=true/disable-user-list=true/' /etc/gdm3/greeter.dconf-defaults
 else
