@@ -33,7 +33,7 @@ done
 while [[ -z "$PRE_LUKS_PASS" ]]; do
     echo ""
     echo "## Please enter a LUKS password or accept the default. ##"
-    read -r -i "unl0ckMyD1sk" -e PRE_LUKS_PASS
+    read -r -i "fudging-security-practices" -e PRE_LUKS_PASS
 done
 
 # Prompt user for local admin info.
@@ -45,7 +45,7 @@ done
 while [[ -z "$PRE_USER_PASS" ]]; do
     echo ""
     echo "## Please enter a local admin password or accept the default. ##"
-    read -r -i "ubuntu" -e PRE_USER_PASS
+    read -r -i "speak-friend-enter" -e PRE_USER_PASS
 done
 
 # Prompt user for hostname.
