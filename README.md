@@ -21,3 +21,6 @@ These scripts will get you a basic Ubuntu desktop (or server) install with the f
 1. As the numbering might suggest, you want to start by running `00_start_here.sh` to populate the `answers.env` file, unless you already have one.
 2. Once the `answers.env` file is set up correctly (or you imported a previous one), `01_base_install.sh` will do the debootstrap and initial config, copy over the files to the chroot, and continue there.
 3. `02_chroot_install.sh` handles the install steps that take place in the chroot, and then kicks it back out when it's done.
+
+### How To Contribute
+Please make your own branch and/or fork, then submit a PR.
