@@ -8,7 +8,8 @@ These scripts will get you a basic Ubuntu desktop (or server) install with the f
   * Boot (ext4)
   * Root (LUKS-encrypted ext4)
 * Canonical-isms removed.
-  * snap
+  * ~~snap~~ (Had to add back for Ubuntu Pro)
+  * ~~Gnome Initial Setup~~ (Had to add back for Ubuntu Pro)
 * Standard things added.
   * Firefox/Chrome + dock pins (on desktop installs).
   * Flatpak + default repos.

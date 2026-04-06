@@ -33,7 +33,6 @@ echo "cryptroot $(blkid -o export $ROOT_PART | grep ^UUID) none luks,discard" >>
 apt -qq -y install linux-{,image-,headers-,tools-}generic-hwe-*-edge linux-firmware initramfs-tools cryptsetup-initramfs efibootmgr dosfstools keyutils dmidecode
 
 # Install dummy packages to prevent apt errors.
-apt -qq -y install '/root/snapd_2.68.5_amd64.deb'
 
 ## Set hostname.
 echo "$HOST_NAME" > /etc/hostname
@@ -46,7 +45,6 @@ yes "$USER_PASS" | passwd "$NEW_USER"
 #### Base System Type Install ####
 if "$DESKTOP_INSTALL"; then
     # Install desktop dummy packages to prevent apt errors.
-    apt -qq -y install '/root/gnome-initial-setup_46.3-1ubuntu3~24.04.2_amd64.deb'
     # Install standard desktop packages.
     apt -qq -y install ubuntu-minimal ubuntu-standard ubuntu-desktop-minimal ssh firefox flatpak gnome-software-plugin-flatpak gnome-firmware htop iftop iotop tree nano bash-completion wget systemd-zram-generator clinfo mesa-opencl-icd intel-opencl-icd pocl-opencl-icd vainfo vulkan-tools dbus-broker
     # Configure flatpak instead of snap.
