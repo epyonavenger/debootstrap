@@ -27,7 +27,9 @@ apt -qq update
 apt -qq -y dist-upgrade
 
 # Make sure `/etc/crypttab` is populated.
-echo "cryptroot $(blkid -o export $ROOT_PART | grep ^UUID) none luks,discard" >> /etc/crypttab
+if "$LUKS_ROOT"; then
+    echo "cryptroot $(blkid -o export $ROOT_PART | grep ^UUID) none luks,discard" >> /etc/crypttab
+fi
 
 # Install kernel and friends.
 apt -qq -y install linux-{,image-,headers-,tools-}generic-hwe-*-edge linux-firmware initramfs-tools cryptsetup-initramfs efibootmgr dosfstools keyutils dmidecode

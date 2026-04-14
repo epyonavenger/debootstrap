@@ -29,12 +29,21 @@ while [[ ! -e "$PRE_BOOT_DISK" ]]; do
     read -r PRE_BOOT_DISK
 done
 
-# Prompt user for LUKS unlock.
-while [[ -z "$PRE_LUKS_PASS" ]]; do
+# Prompt user for encrypted root.
+while [[ -z "$PRE_LUKS_ROOT" ]]; do
     echo ""
-    echo "## Please enter a LUKS password or accept the default. ##"
-    read -r -i "fudging-security-practices" -e PRE_LUKS_PASS
+    echo "## Configure encrypted root? (Valid answers are 'true' or 'false') ##"
+    read -r -i "false" -e PRE_LUKS_ROOT
 done
+
+# Prompt user for LUKS unlock.
+if "$PRE_LUKS_ROOT"; then
+    while [[ -z "$PRE_LUKS_PASS" ]]; do
+        echo ""
+        echo "## Please enter a LUKS password or accept the default. ##"
+        read -r -i "fudging-security-practices" -e PRE_LUKS_PASS
+    done
+fi
 
 # Prompt user for local admin info.
 while [[ -z "$PRE_NEW_USER" ]]; do
@@ -62,7 +71,7 @@ while [[ -z "$PRE_DESKTOP_INSTALL" ]]; do
     read -r -i "false" -e PRE_DESKTOP_INSTALL
 done
 
-# Prompter user for dual-boot or single-boot.
+# Prompt user for dual-boot or single-boot.
 while [[ -z "$PRE_DUAL_BOOT" ]]; do
     echo ""
     echo "## Configure dual-boot partition layout? (Valid answers are 'true' or 'false') ##"
@@ -99,6 +108,7 @@ fi
 
 touch includes/answers.env
 echo '#!/bin/bash' >> includes/answers.env
+echo "export LUKS_ROOT=$PRE_LUKS_ROOT" >> includes/answers.env
 echo "export LUKS_PASS=$PRE_LUKS_PASS" >> includes/answers.env
 echo "export BOOT_DISK=$PRE_BOOT_DISK" >> includes/answers.env
 echo "export EFI_PART=$PRE_EFI_PART" >> includes/answers.env

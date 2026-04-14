@@ -30,28 +30,42 @@ sgdisk --zap-all "$BOOT_DISK"
 # Create EFI, boot, and root partitions.
 sgdisk -n "1:0:+2G" -t "1:ef00" "$BOOT_DISK"
 sgdisk -c "1:EFI system partition" "$BOOT_DISK"
-sgdisk -n "2:0:+2G" -t "2:8300" "$BOOT_DISK"
-sgdisk -c "2:Linux filesystem" "$BOOT_DISK"
-sgdisk -n "3:0:0" -t "3:8309" "$BOOT_DISK"
-sgdisk -c "3:Linux LUKS" "$BOOT_DISK"
-if "$DUAL_BOOT"; then
-    parted "$BOOT_DISK" resizepart 3 50%
-fi
+if "$LUKS_ROOT"; then
+    sgdisk -n "2:0:+2G" -t "2:8300" "$BOOT_DISK"
+    sgdisk -c "2:Linux filesystem" "$BOOT_DISK"
+    sgdisk -n "3:0:0" -t "3:8309" "$BOOT_DISK"
+    sgdisk -c "3:Linux LUKS" "$BOOT_DISK"
+    if "$DUAL_BOOT"; then
+        parted "$BOOT_DISK" resizepart 3 50%
+    fi
 
-# Prompt for LUKS password, or use the variable if it's set.
-cryptsetup luksFormat --batch-mode "$ROOT_PART" <<< "$LUKS_PASS"
-cryptsetup open "$ROOT_PART" cryptroot <<< "$LUKS_PASS"
+    # Prompt for LUKS password, or use the variable if it's set.
+    cryptsetup luksFormat --batch-mode "$ROOT_PART" <<< "$LUKS_PASS"
+    cryptsetup open "$ROOT_PART" cryptroot <<< "$LUKS_PASS"
+else
+    sgdisk -n "2:0:0" -t "2:8300" "$BOOT_DISK"
+    sgdisk -c "2:Linux filesystem" "$BOOT_DISK"
+    if "$DUAL_BOOT"; then
+        parted "$BOOT_DISK" resizepart 2 50%
+    fi
+fi
 
 # Create the filesystems.
 echo 'y' | mkfs.vfat "$EFI_PART"
 echo 'y' | mkfs.ext4 "$BOOT_PART"
-echo 'y' | mkfs.ext4 /dev/mapper/cryptroot
+if "$LUKS_ROOT"; then
+    echo 'y' | mkfs.ext4 /dev/mapper/cryptroot
+fi
 
 ## Mount the partitions to /mnt.
-mount /dev/mapper/cryptroot /mnt
-mkdir /mnt/boot
-mount "$BOOT_PART" /mnt/boot
-mkdir /mnt/boot/efi
+if "$LUKS_ROOT"; then
+    mount /dev/mapper/cryptroot /mnt
+    mkdir /mnt/boot
+    mount "$BOOT_PART" /mnt/boot
+else
+    mount "$BOOT_PART" /mnt
+fi
+mkdir -p /mnt/boot/efi
 mount "$EFI_PART" /mnt/boot/efi
 
 #### Base Install Tasks ####
@@ -98,7 +112,9 @@ arch-chroot /mnt bash /root/02_chroot_install.sh
 
 ## Finalization Tasks ####
 umount -R /mnt
-cryptsetup close /dev/mapper/cryptroot
+if "$LUKS_ROOT"; then
+    cryptsetup close /dev/mapper/cryptroot
+fi
 
 # Goodbye.
 echo ""
